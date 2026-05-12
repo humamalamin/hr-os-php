@@ -56,99 +56,88 @@ include '../includes/sidebar.php';
     <?php include '../includes/navbar.php'; ?>
 
     <main class="main-content">
-        <?php if (isset($_GET['status']) && $_GET['status'] === 'success'): ?>
-            <script>
-                document.addEventListener('DOMContentLoaded', function() {
-                    showToast('Action completed successfully!');
-                });
-            </script>
-        <?php endif; ?>
-
-        <?php if (isset($_GET['error'])): ?>
-            <div class="alert alert-danger border-0 shadow-sm mb-4" role="alert">
-                <i class="bi bi-exclamation-triangle-fill me-2"></i>
-                <?php
-                switch ($_GET['error']) {
-                    case 'email_exists':
-                        echo 'Error: This email address is already registered.';
-                        break;
-                    case 'invalid_email':
-                        echo 'Error: Please enter a valid email address.';
-                        break;
-                    case 'empty_fields':
-                        echo 'Error: All required fields must be filled.';
-                        break;
-                    case 'self_delete':
-                        echo 'Error: You cannot delete your own account.';
-                        break;
-                    case 'db_error':
-                        echo 'Error: A database error occurred. Please try again.';
-                        break;
-                    default:
-                        echo 'An unexpected error occurred.';
-                }
-                ?>
+        <!-- Header Section -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h2 class="fw-800 text-dark mb-1">User Management</h2>
+                <p class="text-muted mb-0">Manage system access levels and administrative accounts.</p>
             </div>
-        <?php endif; ?>
+            <button type="button" class="btn btn-primary fw-bold px-4" style="background-color: #2563eb; border-color: #2563eb;" data-bs-toggle="modal" data-bs-target="#addUserModal">
+                <i class="bi bi-plus-lg me-2"></i>Add New User
+            </button>
+        </div>
 
-        <!-- Breadcrumb -->
-        <nav aria-label="breadcrumb" class="mb-4">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="../index.php" class="text-decoration-none">Home</a></li>
-                <li class="breadcrumb-item active" aria-current="page">User Management</li>
-            </ol>
-        </nav>
-
-        <div class="card border-0 shadow-sm">
-            <div class="card-header bg-white py-3">
-                <div class="row align-items-center">
-                    <div class="col">
-                        <h6 class="mb-0 fw-bold">System Users</h6>
+        <!-- Filter Bar Card -->
+        <div class="card border-0 mb-4">
+            <div class="card-body p-3">
+                <form class="row g-3 align-items-center" method="GET">
+                    <div class="col-12 col-lg-8">
+                        <div class="position-relative">
+                            <i class="bi bi-search position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"></i>
+                            <input type="text" name="search" class="form-control employee-filter-input" placeholder="Search by name or email..." value="<?php echo htmlspecialchars($search); ?>">
+                        </div>
                     </div>
-                    <div class="col-auto">
-                        <form class="d-flex gap-2" method="GET">
-                            <div class="input-group input-group-sm" style="width: 250px;">
-                                <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-muted"></i></span>
-                                <input type="text" name="search" class="form-control border-start-0" placeholder="Search users..." value="<?php echo htmlspecialchars($search); ?>">
-                            </div>
-                            <button type="submit" class="btn btn-light btn-sm border">Search</button>
-                            <button type="button" class="btn btn-primary btn-sm d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#addUserModal">
-                                <i class="bi bi-plus-lg"></i> Add User
-                            </button>
-                        </form>
+                    <div class="col-6 col-lg-2">
+                        <a href="index.php" class="btn btn-light border bg-white w-100 fw-bold py-2" style="border-radius: 10px;">Reset</a>
                     </div>
-                </div>
+                    <div class="col-6 col-lg-2">
+                        <button type="submit" class="btn btn-apply-filter w-100 py-2">Search</button>
+                    </div>
+                </form>
             </div>
+        </div>
+
+        <!-- User Table Card -->
+        <div class="card border-0">
             <div class="table-responsive">
-                <table class="table table-hover align-middle">
+                <table class="table table-hover align-middle employee-table">
                     <thead>
                         <tr>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Role</th>
-                            <th>Created Date</th>
-                            <th class="text-end">Actions</th>
+                            <th>USER</th>
+                            <th>EMAIL ADDRESS</th>
+                            <th>ACCESS LEVEL</th>
+                            <th>ACCOUNT STATUS</th>
+                            <th class="text-center">ACTIONS</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php if (empty($users)): ?>
                             <tr>
-                                <td colspan="5" class="text-center py-5 text-muted">
-                                    No users found matching your criteria.
+                                <td colspan="5" class="text-center py-5">
+                                    <p class="text-muted mb-0">No users found matching your search.</p>
                                 </td>
                             </tr>
                         <?php else: ?>
                             <?php foreach ($users as $user): ?>
                                 <tr>
                                     <td>
-                                        <div class="fw-semibold text-dark"><?php echo htmlspecialchars($user['name']); ?></div>
+                                        <div class="d-flex align-items-center">
+                                            <div class="user-initial-avatar me-3">
+                                                <?php 
+                                                    $names = explode(' ', $user['name']);
+                                                    echo strtoupper(substr($names[0], 0, 1) . (isset($names[1]) ? substr($names[1], 0, 1) : ''));
+                                                ?>
+                                            </div>
+                                            <div>
+                                                <div class="employee-row-title"><?php echo htmlspecialchars($user['name']); ?></div>
+                                                <div class="employee-row-sub">ID: #<?php echo $user['id']; ?></div>
+                                            </div>
+                                        </div>
                                     </td>
-                                    <td><?php echo htmlspecialchars($user['email']); ?></td>
-                                    <td><span class="badge bg-primary-soft text-primary rounded-pill px-3"><?php echo htmlspecialchars($user['role']); ?></span></td>
-                                    <td><?php echo date('M d, Y', strtotime($user['created_at'])); ?></td>
-                                    <td class="text-end">
-                                        <div class="btn-group">
-                                            <button class="btn btn-light btn-sm border edit-user-btn"
+                                    <td>
+                                        <div class="employee-row-title" style="font-weight: 600; font-size: 0.85rem;"><?php echo htmlspecialchars($user['email']); ?></div>
+                                    </td>
+                                    <td>
+                                        <span class="role-badge <?php echo strtolower($user['role']); ?>">
+                                            <?php echo ucfirst($user['role']); ?>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="status-badge-v2 active">Active</span>
+                                    </td>
+                                    <td>
+                                        <div class="d-flex justify-content-center gap-2">
+                                            <button class="btn-action-light edit-user-btn"
                                                 title="Edit"
                                                 data-bs-toggle="modal"
                                                 data-bs-target="#editUserModal"
@@ -158,14 +147,15 @@ include '../includes/sidebar.php';
                                                 data-role="<?php echo $user['role']; ?>">
                                                 <i class="bi bi-pencil-square"></i>
                                             </button>
+                                            
                                             <?php if ($user['id'] != $_SESSION['user_id']): ?>
-                                                <form action="do_delete.php" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this user? This action cannot be undone.');">
+                                                <form action="do_delete.php" method="POST" class="d-inline" onsubmit="return confirm('Delete this user account?');">
                                                     <?php csrf_input(); ?>
                                                     <input type="hidden" name="id" value="<?php echo $user['id']; ?>">
-                                                    <button type="submit" class="btn btn-light btn-sm border text-danger" title="Delete"><i class="bi bi-trash"></i></button>
+                                                    <button type="submit" class="btn-action-light delete" title="Delete"><i class="bi bi-trash"></i></button>
                                                 </form>
                                             <?php else: ?>
-                                                <button class="btn btn-light btn-sm border text-muted" title="You cannot delete yourself" disabled><i class="bi bi-trash"></i></button>
+                                                <button class="btn-action-light text-muted opacity-50" title="You cannot delete yourself" disabled><i class="bi bi-trash"></i></button>
                                             <?php endif; ?>
                                         </div>
                                     </td>
@@ -175,52 +165,13 @@ include '../includes/sidebar.php';
                     </tbody>
                 </table>
             </div>
-            <div class="card-footer bg-white py-3">
-                <div class="row align-items-center">
-                    <div class="col">
-                        <p class="mb-0 small text-muted">
-                            Showing <?php echo $showing_from; ?> to <?php echo $showing_to; ?> of <?php echo $total_users; ?> users
-                        </p>
-                    </div>
-                    <?php if ($total_pages > 1): ?>
-                        <div class="col-auto">
-                            <nav aria-label="Page navigation">
-                                <ul class="pagination pagination-sm mb-0">
-                                    <li class="page-item <?php echo $page <= 1 ? 'disabled' : ''; ?>">
-                                        <a class="page-link" href="?page=<?php echo $page - 1; ?>&search=<?php echo urlencode($search); ?>"><i class="bi bi-chevron-left"></i></a>
-                                    </li>
-                                    <?php
-                                    // Show max 5 page numbers with ellipsis
-                                    $range = 2;
-                                    $start_page = max(1, $page - $range);
-                                    $end_page = min($total_pages, $page + $range);
-
-                                    if ($start_page > 1) {
-                                        echo '<li class="page-item"><a class="page-link" href="?page=1&search=' . urlencode($search) . '">1</a></li>';
-                                        if ($start_page > 2) echo '<li class="page-item disabled"><span class="page-link">…</span></li>';
-                                    }
-
-                                    for ($i = $start_page; $i <= $end_page; $i++): ?>
-                                        <li class="page-item <?php echo $i === $page ? 'active' : ''; ?>">
-                                            <a class="page-link" href="?page=<?php echo $i; ?>&search=<?php echo urlencode($search); ?>"><?php echo $i; ?></a>
-                                        </li>
-                                    <?php endfor;
-
-                                    if ($end_page < $total_pages) {
-                                        if ($end_page < $total_pages - 1) echo '<li class="page-item disabled"><span class="page-link">…</span></li>';
-                                        echo '<li class="page-item"><a class="page-link" href="?page=' . $total_pages . '&search=' . urlencode($search) . '">' . $total_pages . '</a></li>';
-                                    }
-                                    ?>
-                                    <li class="page-item <?php echo $page >= $total_pages ? 'disabled' : ''; ?>">
-                                        <a class="page-link" href="?page=<?php echo $page + 1; ?>&search=<?php echo urlencode($search); ?>"><i class="bi bi-chevron-right"></i></a>
-                                    </li>
-                                </ul>
-                            </nav>
-                        </div>
-                    <?php endif; ?>
-                </div>
+            
+            <div class="card-footer bg-white border-0 py-3 px-4">
+                <p class="text-muted small mb-0">Showing <b><?php echo count($users); ?></b> of <b><?php echo $total_users; ?></b> users</p>
             </div>
         </div>
+    </main>
+iv>
     </main>
 </div>
 

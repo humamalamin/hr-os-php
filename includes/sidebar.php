@@ -1,64 +1,49 @@
 <aside id="sidebar">
     <div class="sidebar-header">
         <a href="<?php echo BASE_URL; ?>index.php" class="logo">
-            <i class="bi bi-people-fill"></i>
-            <span>HR-OS</span>
+            <div class="sidebar-logo-icon">
+                <i class="bi bi-person-vcard"></i>
+            </div>
+            <span>HR<b>OS</b></span>
         </a>
     </div>
     
-    <div class="py-3">
-        <div class="px-4 mb-2">
-            <small class="text-uppercase fw-bold text-muted" style="font-size: 0.65rem; letter-spacing: 0.05rem;">General</small>
-        </div>
+    <div class="sidebar-content flex-grow-1 overflow-auto">
+        <div class="sidebar-section-label">Operations</div>
         <nav class="nav nav-pills flex-column">
             <a class="nav-link <?php echo ($current_page == 'dashboard') ? 'active' : ''; ?>" href="<?php echo BASE_URL; ?>index.php">
-                <i class="bi bi-grid-1x2"></i>
+                <i class="bi bi-grid-fill"></i>
                 Dashboard
             </a>
             <a class="nav-link <?php echo ($current_page == 'employees') ? 'active' : ''; ?>" href="<?php echo BASE_URL; ?>employees/index.php">
-                <i class="bi bi-person-badge"></i>
+                <i class="bi bi-people-fill"></i>
                 Employees
             </a>
+        </nav>
+
+        <div class="sidebar-section-label">System Settings</div>
+        <nav class="nav nav-pills flex-column">
             <a class="nav-link <?php echo ($current_page == 'users') ? 'active' : ''; ?>" href="<?php echo BASE_URL; ?>users/index.php">
-                <i class="bi bi-shield-lock"></i>
-                User Access
-            </a>
-        </nav>
-
-        <div class="px-4 mb-2 mt-4">
-            <small class="text-uppercase fw-bold text-muted" style="font-size: 0.65rem; letter-spacing: 0.05rem;">Organization</small>
-        </div>
-        <nav class="nav nav-pills flex-column">
-            <a class="nav-link" href="#">
-                <i class="bi bi-building"></i>
-                Departments
+                <i class="bi bi-shield-lock-fill"></i>
+                User Management
             </a>
             <a class="nav-link" href="#">
-                <i class="bi bi-briefcase"></i>
-                Positions
-            </a>
-            <a class="nav-link" href="#">
-                <i class="bi bi-calendar-event"></i>
-                Attendance
-            </a>
-            <a class="nav-link" href="#">
-                <i class="bi bi-cash-stack"></i>
-                Payroll
-            </a>
-        </nav>
-
-        <div class="px-4 mb-2 mt-4">
-            <small class="text-uppercase fw-bold text-muted" style="font-size: 0.65rem; letter-spacing: 0.05rem;">System</small>
-        </div>
-        <nav class="nav nav-pills flex-column">
-            <a class="nav-link" href="#">
-                <i class="bi bi-gear"></i>
+                <i class="bi bi-gear-fill"></i>
                 Settings
             </a>
-            <a class="nav-link text-danger mt-4" href="<?php echo BASE_URL; ?>auth/logout.php">
-                <i class="bi bi-box-arrow-left"></i>
-                Logout
-            </a>
         </nav>
+    </div>
+
+    <div class="sidebar-footer">
+        <div class="sidebar-user">
+            <img src="https://ui-avatars.com/api/?name=<?php echo urlencode($_SESSION['user_name'] ?? 'User'); ?>&background=4f46e5&color=fff" alt="">
+            <div class="sidebar-user-info">
+                <p><?php echo htmlspecialchars($_SESSION['user_name'] ?? 'Admin User'); ?></p>
+                <span><?php echo ucfirst(htmlspecialchars($_SESSION['user_role'] ?? 'Admin')); ?></span>
+            </div>
+        </div>
+        <a href="<?php echo BASE_URL; ?>auth/logout.php" class="btn btn-signout text-decoration-none">
+            <i class="bi bi-box-arrow-left me-2"></i>Sign Out
+        </a>
     </div>
 </aside>
