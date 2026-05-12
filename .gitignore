@@ -1,0 +1,12 @@
+# PHP
+vendor/
+composer.lock
+.env
+.DS_Store
+
+# Uploads
+uploads/*
+!uploads/.gitkeep
+
+# Docker
+docker/mysql/data/
