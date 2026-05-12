@@ -26,54 +26,59 @@ include 'includes/sidebar.php';
     <?php include 'includes/navbar.php'; ?>
 
     <main class="main-content">
-        <!-- Breadcrumb -->
-        <nav aria-label="breadcrumb" class="mb-4">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="#" class="text-decoration-none">Home</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
-            </ol>
-        </nav>
+        <!-- Header Section -->
+        <div class="d-flex justify-content-between align-items-end mb-4">
+            <div>
+                <h2 class="h3 fw-800 mb-1">Welcome back, <?php echo explode(' ', $_SESSION['user_name'])[0]; ?>!</h2>
+                <p class="text-muted mb-0">Here's what's happening with your workforce today.</p>
+            </div>
+            <div class="d-none d-md-block">
+                <a href="employees/add.php" class="btn btn-primary">
+                    <i class="bi bi-plus-lg me-2"></i>Add Employee
+                </a>
+            </div>
+        </div>
 
         <!-- Stats Cards -->
-        <div class="row g-4 mb-4">
+        <div class="row g-4 mb-5">
             <div class="col-12 col-sm-6 col-xl-3">
-                <div class="card h-100">
+                <div class="card border-0">
                     <div class="card-body stat-card">
                         <div class="stat-icon primary">
-                            <i class="bi bi-people"></i>
+                            <i class="bi bi-people-fill"></i>
                         </div>
                         <div class="stat-value"><?php echo number_format($total_employees); ?></div>
-                        <div class="stat-label">Total Employees</div>
+                        <div class="stat-label">Total Workforce</div>
                     </div>
                 </div>
             </div>
             <div class="col-12 col-sm-6 col-xl-3">
-                <div class="card h-100">
+                <div class="card border-0">
                     <div class="card-body stat-card">
                         <div class="stat-icon success">
-                            <i class="bi bi-person-check"></i>
+                            <i class="bi bi-person-check-fill"></i>
                         </div>
                         <div class="stat-value"><?php echo number_format($active_employees); ?></div>
-                        <div class="stat-label">Active Employees</div>
+                        <div class="stat-label">Active Status</div>
                     </div>
                 </div>
             </div>
             <div class="col-12 col-sm-6 col-xl-3">
-                <div class="card h-100">
+                <div class="card border-0">
                     <div class="card-body stat-card">
                         <div class="stat-icon warning">
-                            <i class="bi bi-shield-lock"></i>
+                            <i class="bi bi-shield-lock-fill"></i>
                         </div>
                         <div class="stat-value"><?php echo number_format($total_users); ?></div>
-                        <div class="stat-label">System Users</div>
+                        <div class="stat-label">System Admins</div>
                     </div>
                 </div>
             </div>
             <div class="col-12 col-sm-6 col-xl-3">
-                <div class="card h-100">
+                <div class="card border-0">
                     <div class="card-body stat-card">
                         <div class="stat-icon info">
-                            <i class="bi bi-person-plus"></i>
+                            <i class="bi bi-person-plus-fill"></i>
                         </div>
                         <div class="stat-value"><?php echo number_format($new_employees_count); ?></div>
                         <div class="stat-label">New Hires (30d)</div>
@@ -85,42 +90,44 @@ include 'includes/sidebar.php';
         <div class="row g-4">
             <!-- Recent Employees Table -->
             <div class="col-12 col-xl-8">
-                <div class="card border-0 shadow-sm h-100">
+                <div class="card border-0 h-100">
                     <div class="card-header d-flex justify-content-between align-items-center">
-                        <span>Recent Employees</span>
-                        <div class="d-flex gap-2">
-                            <a href="employees/index.php" class="btn btn-sm btn-light border fw-semibold">View All</a>
-                        </div>
+                        <span class="fs-5">Recent Talent</span>
+                        <a href="employees/index.php" class="btn btn-sm btn-light border text-primary fw-bold px-3">View Directory</a>
                     </div>
                     <div class="table-responsive">
                         <table class="table table-hover align-middle">
                             <thead>
                                 <tr>
                                     <th>Employee</th>
-                                    <th>Position</th>
-                                    <th>Joined Date</th>
+                                    <th>Department/Role</th>
+                                    <th>Joined</th>
                                     <th>Status</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php if (empty($recent_employees)): ?>
-                                    <tr><td colspan="4" class="text-center py-4 text-muted">No recent employees.</td></tr>
+                                    <tr><td colspan="4" class="text-center py-5 text-muted">No recent records found.</td></tr>
                                 <?php else: ?>
                                     <?php foreach($recent_employees as $emp): ?>
                                     <tr>
                                         <td>
                                             <div class="d-flex align-items-center">
-                                                <img src="<?php echo $emp['photo_url'] ? BASE_URL . $emp['photo_url'] : 'https://ui-avatars.com/api/?name='.urlencode($emp['full_name']).'&background=random'; ?>" class="avatar me-3" alt="" style="width: 32px; height: 32px; object-fit: cover; border-radius: 50%;">
+                                                <img src="<?php echo $emp['photo_url'] ? BASE_URL . $emp['photo_url'] : 'https://ui-avatars.com/api/?name='.urlencode($emp['full_name']).'&background=4f46e5&color=fff'; ?>" class="avatar me-3" alt="">
                                                 <div>
-                                                    <div class="fw-bold text-dark small"><?php echo htmlspecialchars($emp['full_name']); ?></div>
+                                                    <div class="fw-bold text-dark"><?php echo htmlspecialchars($emp['full_name']); ?></div>
                                                     <div class="small text-muted" style="font-size: 0.75rem;"><?php echo htmlspecialchars($emp['email']); ?></div>
                                                 </div>
                                             </div>
                                         </td>
-                                        <td class="small"><?php echo htmlspecialchars($emp['position']); ?></td>
-                                        <td class="small"><?php echo date('M d, Y', strtotime($emp['joining_date'])); ?></td>
                                         <td>
-                                            <span class="status-badge status-<?php echo strtolower($emp['status']); ?>" style="font-size: 0.7rem;">
+                                            <div class="small fw-semibold"><?php echo htmlspecialchars($emp['position']); ?></div>
+                                            <div class="text-muted small" style="font-size: 0.7rem;">Engineering</div>
+                                        </td>
+                                        <td class="small text-muted"><?php echo date('M d, Y', strtotime($emp['joining_date'])); ?></td>
+                                        <td>
+                                            <span class="status-badge status-<?php echo strtolower($emp['status']); ?>">
+                                                <i class="bi bi-circle-fill" style="font-size: 0.4rem;"></i>
                                                 <?php echo ucfirst($emp['status']); ?>
                                             </span>
                                         </td>
@@ -135,42 +142,42 @@ include 'includes/sidebar.php';
 
             <!-- Recent Activity -->
             <div class="col-12 col-xl-4">
-                <div class="card border-0 shadow-sm h-100">
+                <div class="card border-0 h-100">
                     <div class="card-header">
-                        Recent Activity
+                        Updates & Activity
                     </div>
                     <div class="card-body">
-                        <div class="timeline">
-                            <div class="d-flex mb-4">
-                                <div class="bg-primary-soft text-primary rounded-circle p-2 me-3 flex-shrink-0" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
-                                    <i class="bi bi-person-plus-fill"></i>
-                                </div>
-                                <div>
-                                    <p class="mb-0 fw-semibold small">New employee onboarded</p>
-                                    <p class="mb-1 text-muted small">John Doe has been added to the Engineering department.</p>
-                                    <small class="text-muted" style="font-size: 0.7rem;">2 hours ago</small>
-                                </div>
-                            </div>
-                            <div class="d-flex mb-4">
-                                <div class="bg-light text-secondary rounded-circle p-2 me-3 flex-shrink-0" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
-                                    <i class="bi bi-shield-lock-fill"></i>
-                                </div>
-                                <div>
-                                    <p class="mb-0 fw-semibold small">User permissions updated</p>
-                                    <p class="mb-1 text-muted small">Admin updated roles for 3 users in the Finance department.</p>
-                                    <small class="text-muted" style="font-size: 0.7rem;">5 hours ago</small>
+                        <div class="timeline mt-2">
+                            <div class="timeline-item">
+                                <div class="d-flex">
+                                    <div>
+                                        <p class="mb-0 fw-bold small">New employee onboarded</p>
+                                        <p class="mb-1 text-muted small">John Doe joined the Engineering team.</p>
+                                        <small class="text-light" style="font-size: 0.7rem;">2 hours ago</small>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="d-flex mb-0">
-                                <div class="bg-info-soft text-info rounded-circle p-2 me-3 flex-shrink-0" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; background-color: #e1f5fe; color: #0277bd;">
-                                    <i class="bi bi-file-earmark-text-fill"></i>
-                                </div>
-                                <div>
-                                    <p class="mb-0 fw-semibold small">Payroll generated</p>
-                                    <p class="mb-1 text-muted small">Monthly payroll reports for May 2024 are ready for review.</p>
-                                    <small class="text-muted" style="font-size: 0.7rem;">Yesterday</small>
+                            <div class="timeline-item">
+                                <div class="d-flex">
+                                    <div>
+                                        <p class="mb-0 fw-bold small">User permissions updated</p>
+                                        <p class="mb-1 text-muted small">Admin updated roles for 3 users.</p>
+                                        <small class="text-light" style="font-size: 0.7rem;">5 hours ago</small>
+                                    </div>
                                 </div>
                             </div>
+                            <div class="timeline-item">
+                                <div class="d-flex">
+                                    <div>
+                                        <p class="mb-0 fw-bold small">Payroll generated</p>
+                                        <p class="mb-1 text-muted small">Reports for May 2024 are ready.</p>
+                                        <small class="text-light" style="font-size: 0.7rem;">Yesterday</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-center mt-3">
+                            <button class="btn btn-sm text-primary fw-bold">View Audit Logs <i class="bi bi-arrow-right ms-1"></i></button>
                         </div>
                     </div>
                 </div>

@@ -19,26 +19,39 @@
 
 <body>
     <div class="login-container">
-        <div class="login-aside d-none d-lg-flex">
-            <div class="text-center">
-                <img src="../assets/images/login-illustration.png" alt="Office Illustration" class="login-illustration mb-4" style="max-height: 400px;">
-                <h4 class="fw-bold">Welcome to HR-OS</h4>
-                <p class="text-muted">The internal operating system for our workforce.</p>
+        <div class="login-aside d-none d-lg-flex" style="background: linear-gradient(135deg, #4f46e5 0%, #4338ca 100%); overflow: hidden;">
+            <!-- Abstract background elements -->
+            <div style="position: absolute; top: -10%; right: -10%; width: 400px; height: 400px; background: rgba(255,255,255,0.05); border-radius: 50%;"></div>
+            <div style="position: absolute; bottom: -5%; left: -5%; width: 300px; height: 300px; background: rgba(255,255,255,0.05); border-radius: 50%;"></div>
+            
+            <div class="text-center px-5 position-relative">
+                <div class="mb-5">
+                    <img src="../assets/images/login-illustration.png" alt="Office Illustration" class="login-illustration shadow-lg rounded-4" style="max-height: 400px; border: 12px solid rgba(255,255,255,0.1); backdrop-filter: blur(10px);">
+                </div>
+                <h2 class="fw-800 text-white mb-3">Optimize Your Workforce</h2>
+                <p class="text-white-50 fs-5 px-4">Experience a seamless management experience with HR-OS. Modern, fast, and secure.</p>
             </div>
         </div>
-        <div class="login-form-container">
+        <div class="login-form-container bg-white">
             <div class="mb-5">
-                <h5 class="fw-bold mb-1">Sign In</h5>
-                <p class="text-muted small">Enter your credentials to access the dashboard.</p>
+                <div class="d-flex align-items-center gap-3 mb-5">
+                    <div class="bg-primary rounded-3 d-flex align-items-center justify-content-center" style="width: 45px; height: 45px;">
+                        <i class="bi bi-people-fill text-white fs-4"></i>
+                    </div>
+                    <span class="fs-3 fw-800 text-dark">HR-OS</span>
+                </div>
+                <h3 class="fw-800 mb-2">Welcome Back</h3>
+                <p class="text-muted">Enter your credentials to manage your team.</p>
 
                 <?php if (isset($_GET['status']) && $_GET['status'] === 'logged_out'): ?>
-                    <div class="alert alert-success border-0 small py-2 mt-3" role="alert">
-                        You have been logged out successfully.
+                    <div class="alert alert-success border-0 small py-3 mt-4 rounded-3" role="alert">
+                        <i class="bi bi-check-circle-fill me-2"></i>You have been logged out successfully.
                     </div>
                 <?php endif; ?>
 
                 <?php if (isset($_GET['error'])): ?>
-                    <div class="alert alert-danger border-0 small py-2 mt-3" role="alert">
+                    <div class="alert alert-danger border-0 small py-3 mt-4 rounded-3" role="alert">
+                        <i class="bi bi-exclamation-triangle-fill me-2"></i>
                         <?php
                         if ($_GET['error'] === 'invalid') echo 'Invalid email or password.';
                         elseif ($_GET['error'] === 'unauthorized') echo 'Please login to access the dashboard.';
@@ -50,36 +63,48 @@
 
             <form action="do_login.php" method="POST">
                 <?php csrf_input(); ?>
-                <div class="mb-3">
-                    <label for="email" class="form-label small fw-semibold">Email Address</label>
-                    <input type="email" name="email" class="form-control form-control-lg" id="email" placeholder="name@company.com" required>
-                </div>
-                <div class="mb-3">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <label for="password" class="form-label small fw-semibold">Password</label>
-                        <a href="#" class="small text-decoration-none">Forgot password?</a>
+                <div class="mb-4">
+                    <label for="email" class="form-label small fw-700 text-uppercase tracking-wider text-muted mb-2">Email Address</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                        <input type="email" name="email" class="form-control form-control-lg" id="email" placeholder="name@company.com" required>
                     </div>
-                    <input type="password" name="password" class="form-control form-control-lg" id="password" placeholder="••••••••" required>
+                </div>
+                <div class="mb-4">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <label for="password" class="form-label small fw-700 text-uppercase tracking-wider text-muted mb-0">Password</label>
+                        <a href="#" class="small text-decoration-none fw-600">Forgot password?</a>
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                        <input type="password" name="password" class="form-control form-control-lg" id="password" placeholder="••••••••" required>
+                    </div>
                 </div>
                 <div class="mb-4">
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox" id="remember">
-                        <label class="form-check-label small text-muted" for="remember">
-                            Remember me on this device
+                        <label class="form-check-label small text-muted fw-500" for="remember">
+                            Remember me for 30 days
                         </label>
                     </div>
                 </div>
-                <button type="submit" class="btn btn-primary btn-lg w-100 mb-4">
-                    Sign In
+                <button type="submit" class="btn btn-primary btn-lg w-100 py-3 fw-bold shadow-sm mb-4">
+                    Sign In to Dashboard
                 </button>
 
                 <div class="text-center">
-                    <p class="small text-muted mb-0">Need help? <a href="#" class="text-decoration-none">Contact IT Support</a></p>
+                    <p class="small text-muted mb-0">Need assistance? <a href="#" class="text-decoration-none fw-600">Contact IT Support</a></p>
                 </div>
             </form>
 
-            <div class="mt-auto pt-5">
-                <p class="small text-muted mb-0">&copy; 2024 Enterprise Solutions Inc.</p>
+            <div class="mt-auto pt-5 border-top border-light">
+                <div class="d-flex justify-content-between align-items-center">
+                    <p class="small text-muted mb-0">&copy; 2024 HR-OS Enterprise</p>
+                    <div class="d-flex gap-3">
+                        <a href="#" class="text-muted small text-decoration-none">Privacy</a>
+                        <a href="#" class="text-muted small text-decoration-none">Terms</a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
