@@ -18,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $joining_date = $_POST['joining_date'] ?? date('Y-m-d');
     $address = sanitize($_POST['address'] ?? '');
     $status = 'active'; // Default for new employee
-    
+
     // Validate department whitelist
     $allowed_depts = ['Engineering', 'Design', 'Marketing', 'Finance', 'Human Resources'];
     if (!in_array($department, $allowed_depts)) {
@@ -43,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $file_name = $_FILES['photo']['name'];
         $file_size = $_FILES['photo']['size'];
         $file_type = $_FILES['photo']['type'];
-        
+
         $allowed_types = ['image/jpeg', 'image/jpg'];
         $max_size = 300 * 1024; // 300KB
 
@@ -77,6 +77,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt = $pdo->prepare($sql);
         $stmt->execute([$employee_id, $full_name, $email, $phone, $position, $department, $status, $address, $joining_date, $photo_url]);
 
+        $data = json_encode([
+            'message' => 'New employee added',
+            'type' => 'success'
+        ]);
+
+        $options = [
+            'http' => [
+                'header'  => "Content-type: application/json",
+                'method'  => 'POST',
+                'content' => $data,
+            ],
+        ];
+
+        $context = stream_context_create($options);
+
+        file_get_contents(
+            'http://localhost:3001/notify',
+            false,
+            $context
+        );
+
         header("Location: index.php?status=success");
         exit();
     } catch (PDOException $e) {
@@ -88,4 +109,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     header("Location: add.php");
     exit();
 }
-?>
